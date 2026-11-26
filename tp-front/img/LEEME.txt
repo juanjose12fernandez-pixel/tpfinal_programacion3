@@ -1,0 +1,2 @@
+Guarda aca el logo con el nombre: logo.jpg
+(si no esta, la pagina muestra un cuadradito con "AG")

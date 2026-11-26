@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida - Atacado Gamer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🎮</text></svg>">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/common.js"></script>
+</head>
+<body>
+    <header id="header" class="header"></header>
+    <main class="contenedor bienvenida">
+        <h2>🎮 ¡Bienvenido a Atacado Gamer! 🎮</h2>
+        <p>Poné tu nombre para ver los productos</p>
+        <form id="form-nombre" class="form">
+            <label for="nombre">Tu nombre:</label>
+            <input type="text" id="nombre" placeholder="Ej: Lucas">
+            <p id="error" class="error"></p>
+            <button type="submit" class="btn btn-primario">Continuar</button>
+        </form>
+    </main>
+    <script>
+        renderHeader();
+
+        const form = document.getElementById("form-nombre");
+        const input = document.getElementById("nombre");
+        const error = document.getElementById("error");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const nombre = input.value.trim();
+
+            // el nombre tiene que tener al menos 2 letras
+            if (nombre.length < 2) {
+                error.textContent = "Escribí tu nombre (mínimo 2 letras)";
+                return;
+            }
+
+            guardar("nombre", nombre);
+            guardar("carrito", []);
+            location.href = "productos.html";
+        });
+    </script>
+</body>
+</html>

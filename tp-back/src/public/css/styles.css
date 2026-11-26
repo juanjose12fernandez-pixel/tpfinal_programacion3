@@ -1,0 +1,76 @@
+/* estilos propios del admin (el resto viene de sakura-vader) */
+
+/* header */
+header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #777;
+}
+
+.marca { display: flex; align-items: center; gap: 10px; }
+.marca h1 { margin: 0; font-size: 24px; }
+
+.logo { width: 50px; height: 50px; object-fit: contain; background: #fff; }
+
+/* botones (los <a> con clase btn se ven igual que los <button>) */
+.btn,
+a.btn:link,
+a.btn:visited {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+    background: #c9c9c9;
+    color: #222;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    font-size: 15px;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn:hover,
+a.btn:hover {
+    background: #fff;
+    color: #222;
+}
+
+.btn-peligro,
+.btn-peligro:hover { background: #d9534f; border-color: #d9534f; color: #fff; }
+.btn-primario,
+.btn-primario:hover { background: #5cb85c; border-color: #5cb85c; color: #fff; }
+
+/* contenido */
+.categoria { text-transform: capitalize; }
+.error { color: #ff6b6b; }
+.muted { color: #aaa; }
+
+/* tabla */
+.tabla-wrap { overflow-x: auto; }
+td img { width: 50px; height: 50px; object-fit: contain; background: #fff; }
+tr.inactivo td { opacity: .5; }
+.acciones { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* formularios */
+.form-caja { max-width: 400px; margin: 0 auto; }
+.form-caja h2 { text-align: center; }
+.form { display: flex; flex-direction: column; }
+.form .btn { text-align: center; }
+
+/* modal de confirmacion */
+.modal-fondo {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal { width: 350px; max-width: 95%; padding: 15px; background: #222; border: 1px solid #c9c9c9; }
+.modal h2 { margin-top: 0; }
+.modal .botones { text-align: right; }

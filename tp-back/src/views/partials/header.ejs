@@ -1,0 +1,17 @@
+<body>
+    <script src="/js/admin.js"></script>
+
+    <header>
+        <div class="marca">
+            <img class="logo" src="/img/logo.jpg" alt="Logo de <%= app.nombre %>">
+            <div>
+                <h1><%= app.nombre %></h1>
+                <small><%= app.alumnos %></small>
+            </div>
+        </div>
+        <nav>
+            <a class="btn" href="/admin/dashboard">Dashboard</a>
+            <a class="btn" href="/admin/products/new">Agregar producto</a>
+            <button type="button" class="btn" onclick="cerrarSesion()">Cerrar sesión</button>
+        </nav>
+    </header>

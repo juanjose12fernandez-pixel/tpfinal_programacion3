@@ -1,0 +1,77 @@
+<%- include("partials/head.ejs", { titulo: "Modificar producto" }) %>
+<%- include("partials/header.ejs") %>
+
+    <main class="contenedor">
+        <section class="form-caja">
+            <h2>Modificar producto</h2>
+            <form id="form-producto" class="form" novalidate>
+                <label for="name">Nombre</label>
+                <input type="text" id="name" value="<%= product.name %>">
+
+                <label for="price">Precio</label>
+                <input type="number" id="price" min="0" step="0.01" value="<%= Number(product.price) %>">
+
+                <label for="category">Categoría</label>
+                <select id="category">
+                    <% categorias.forEach((c) => { %>
+                        <option value="<%= c %>" <%= c === product.category ? "selected" : "" %>><%= c %></option>
+                    <% }); %>
+                </select>
+
+                <label for="image">Imagen (URL)</label>
+                <input type="text" id="image" value="<%= product.image %>">
+
+                <label for="active">Estado</label>
+                <select id="active">
+                    <option value="true" <%= product.active ? "selected" : "" %>>Activo</option>
+                    <option value="false" <%= product.active ? "" : "selected" %>>Inactivo</option>
+                </select>
+
+                <p id="error" class="error" role="alert"></p>
+
+                <button type="submit" class="btn btn-primario btn-grande">Guardar cambios</button>
+                <a class="btn btn-sec" href="/admin/dashboard">Cancelar</a>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        protegerAdmin();
+
+        const productId = <%= product.id %>;
+        const form = document.getElementById("form-producto");
+        const error = document.getElementById("error");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            error.textContent = "";
+
+            const producto = {
+                id: productId,
+                name: document.getElementById("name").value.trim(),
+                price: Number(document.getElementById("price").value),
+                category: document.getElementById("category").value,
+                image: document.getElementById("image").value.trim(),
+                active: document.getElementById("active").value === "true"
+            };
+
+            try {
+                const respuesta = await fetch("/api/products", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(producto)
+                });
+                const datos = await respuesta.json();
+
+                if (!respuesta.ok) {
+                    mostrarErrores(error, datos);
+                    return;
+                }
+
+                location.href = "/admin/dashboard";
+            } catch (err) {
+                error.textContent = "No se pudo conectar con el servidor";
+            }
+        });
+    </script>
+<%- include("partials/footer.ejs") %>

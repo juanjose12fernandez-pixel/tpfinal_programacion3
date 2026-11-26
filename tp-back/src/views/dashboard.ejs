@@ -1,0 +1,74 @@
+<%- include("partials/head.ejs", { titulo: "Dashboard" }) %>
+<%- include("partials/header.ejs") %>
+
+    <main class="contenedor">
+        <h2>Productos</h2>
+        <p class="muted">Los productos inactivos no se muestran a los clientes.</p>
+
+        <% categorias.forEach((categoria) => { %>
+            <% const lista = products.filter((p) => p.category === categoria); %>
+            <h3 class="categoria"><%= categoria %></h3>
+
+            <% if (lista.length === 0) { %>
+                <p class="muted">No hay productos en esta categoría.</p>
+            <% } else { %>
+                <div class="tabla-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Imagen</th><th>Nombre</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr>
+                        </thead>
+                        <tbody>
+                            <% lista.forEach((p) => { %>
+                                <tr class="<%= p.active ? '' : 'inactivo' %>">
+                                    <td><img src="<%= p.image %>" alt="<%= p.name %>"></td>
+                                    <td><%= p.name %></td>
+                                    <td>$<%= Number(p.price).toLocaleString("es-AR") %></td>
+                                    <td><%= p.active ? "Activo" : "Inactivo" %></td>
+                                    <td>
+                                        <div class="acciones">
+                                            <a class="btn btn-sec" href="/admin/products/<%= p.id %>/edit">Editar</a>
+                                            <% if (p.active) { %>
+                                                <button class="btn btn-peligro" data-accion="desactivar" data-id="<%= p.id %>" data-nombre="<%= p.name %>">Desactivar</button>
+                                            <% } else { %>
+                                                <button class="btn btn-primario" data-accion="activar" data-id="<%= p.id %>" data-nombre="<%= p.name %>">Activar</button>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        <% }); %>
+    </main>
+
+    <script>
+        protegerAdmin();
+
+        document.querySelector("main").addEventListener("click", async (event) => {
+            const boton = event.target.closest("button[data-accion]");
+            if (!boton) return;
+
+            const { accion, id, nombre } = boton.dataset;
+            const desactivar = accion === "desactivar";
+
+            const ok = await confirmar(
+                desactivar ? "Desactivar producto" : "Activar producto",
+                `¿Seguro que querés ${desactivar ? "desactivar" : "activar"} "${nombre}"?`
+            );
+            if (!ok) return;
+
+            try {
+                const respuesta = desactivar
+                    ? await fetch(`/api/products/${id}`, { method: "DELETE" })
+                    : await fetch(`/api/products/${id}/activate`, { method: "PUT" });
+
+                if (!respuesta.ok) throw new Error("La API respondió con error");
+                location.reload();
+            } catch (error) {
+                alert("No se pudo completar la acción");
+            }
+        });
+    </script>
+<%- include("partials/footer.ejs") %>
