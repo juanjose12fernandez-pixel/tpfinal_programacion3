@@ -1,16 +1,5 @@
 // Funciones compartidas por las vistas del administrador
 
-// Si no hay sesion iniciada, volvemos al login
-// (OJO: esto es solo una comprobacion del lado del cliente, no es seguridad real)
-function protegerAdmin() {
-    if (!localStorage.getItem("admin")) location.href = "/admin/login";
-}
-
-function cerrarSesion() {
-    localStorage.removeItem("admin");
-    location.href = "/admin/login";
-}
-
 // Modal de confirmacion: devuelve una promesa con true/false
 function confirmar(titulo, texto) {
     return new Promise((resolve) => {

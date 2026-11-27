@@ -10,6 +10,12 @@ const tabs = document.getElementById("tabs");
 const grid = document.getElementById("grid");
 const paginacion = document.getElementById("paginacion");
 const mensaje = document.getElementById("mensaje");
+const buscador = document.getElementById("buscador");
+
+// pasa a minusculas y saca las tildes, para que "microfono" encuentre "Micrófono"
+function normalizar(texto) {
+    return String(texto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 
 function categoriaDe(p) {
     return p.category || "Productos";
@@ -60,11 +66,22 @@ function dibujar() {
     });
 
     tabs.innerHTML = categorias.map(function (c) {
-        const clase = c === categoria ? "btn btn-primario" : "btn";
+        // si estamos buscando, ninguna pestaña queda marcada
+        const clase = (c === categoria && !buscador.value.trim()) ? "btn btn-primario" : "btn";
         return `<button class="${clase}" data-categoria="${esc(c)}">${esc(c)}</button>`;
     }).join("");
 
-    const filtrados = productos.filter(function (p) { return categoriaDe(p) === categoria; });
+    // si hay texto en el buscador se busca en todos los productos, si no, solo en la categoria elegida
+    const texto = normalizar(buscador.value.trim());
+    let filtrados;
+    if (texto) {
+        filtrados = productos.filter(function (p) { return normalizar(p.name).includes(texto); });
+    } else {
+        filtrados = productos.filter(function (p) { return categoriaDe(p) === categoria; });
+    }
+
+    mensaje.textContent = filtrados.length === 0 ? "No se encontraron productos." : "";
+
     let totalPaginas = Math.ceil(filtrados.length / POR_PAGINA);
     if (totalPaginas < 1) totalPaginas = 1;
     if (pagina > totalPaginas) pagina = totalPaginas;
@@ -101,6 +118,7 @@ tabs.addEventListener("click", function (event) {
     const boton = event.target.closest("button");
     if (!boton) return;
     categoria = boton.dataset.categoria;
+    buscador.value = "";
     pagina = 1;
     dibujar();
 });
@@ -122,6 +140,11 @@ paginacion.addEventListener("click", function (event) {
     const boton = event.target.closest("button");
     if (!boton) return;
     pagina = pagina + Number(boton.dataset.pag);
+    dibujar();
+});
+
+buscador.addEventListener("input", function () {
+    pagina = 1;
     dibujar();
 });
 

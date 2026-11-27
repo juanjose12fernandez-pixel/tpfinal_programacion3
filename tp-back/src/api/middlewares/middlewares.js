@@ -148,19 +148,16 @@ const validateUser = (req, res, next) => {
 
 
 
-// Middleware (de ruta) para validar los datos del login
-const validateLogin = (req, res, next) => {
+// Middleware de proteccion de rutas
+const requireLogin = (req, res, next) => {
 
-    const { email, password } = req.body;
-
-    if (typeof email !== "string" || email.trim() === "" || typeof password !== "string" || password === "") {
-        return res.status(400).json({
-            message: "Datos invalidos",
-            listaErrores: ["Ingresa el email y la contrasena"]
-        });
+    // Chequeamos si existe una sesion creada, sino redirigimos a login
+    if (!req.session.user) {
+        return res.redirect("/admin/login");
     }
 
-    next(); // Damos paso al siguiente middleware o a la response
+    // Damos paso al siguiente middleware o a la response
+    next();
 }
 
 
@@ -171,5 +168,5 @@ export {
     validateProduct,
     validateSale,
     validateUser,
-    validateLogin
+    requireLogin
 }

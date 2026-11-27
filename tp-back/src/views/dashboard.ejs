@@ -44,8 +44,6 @@
     </main>
 
     <script>
-        protegerAdmin();
-
         document.querySelector("main").addEventListener("click", async (event) => {
             const boton = event.target.closest("button[data-accion]");
             if (!boton) return;

@@ -3,22 +3,16 @@
 =====================*/
 
 import { Router } from "express";
-import { validateLogin, validateUser } from "../middlewares/middlewares.js";
-import { createUser, loginUser } from "../controllers/user.controllers.js";
+import { requireLogin, validateUser } from "../middlewares/middlewares.js";
+import { createUser } from "../controllers/user.controllers.js";
 
 
 const router = Router();
 
 
 /////////////////////////
-// POST user (alta de administrador)
-router.post("/", validateUser, createUser);
-
-
-
-/////////////////////////
-// POST login
-router.post("/login", validateLogin, loginUser);
+// POST user (alta de administrador, solo con sesion iniciada)
+router.post("/", requireLogin, validateUser, createUser);
 
 
 

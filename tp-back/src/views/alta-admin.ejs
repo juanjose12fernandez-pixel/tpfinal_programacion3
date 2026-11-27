@@ -1,0 +1,72 @@
+<%- include("partials/head.ejs", { titulo: "Agregar administrador" }) %>
+<%- include("partials/header.ejs") %>
+
+    <main class="contenedor">
+        <section class="form-caja">
+            <h2>Agregar administrador</h2>
+            <form id="form-admin" class="form" novalidate>
+                <label for="name">Nombre</label>
+                <input type="text" id="name">
+
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="ejemplo@gmail.com">
+
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Mínimo 6 caracteres">
+
+                <label for="password2">Repetir contraseña</label>
+                <input type="password" id="password2">
+
+                <p id="error" class="error" role="alert"></p>
+                <p id="ok" role="status"></p>
+
+                <button type="submit" class="btn btn-primario btn-grande">Crear administrador</button>
+                <a class="btn btn-sec" href="/admin/dashboard">Volver</a>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById("form-admin");
+        const error = document.getElementById("error");
+        const ok = document.getElementById("ok");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            error.textContent = "";
+            ok.textContent = "";
+
+            const usuario = {
+                name: document.getElementById("name").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                password: document.getElementById("password").value
+            };
+
+            // las dos contraseñas tienen que ser iguales
+            if (usuario.password !== document.getElementById("password2").value) {
+                error.textContent = "Las contraseñas no coinciden";
+                return;
+            }
+
+            try {
+                const respuesta = await fetch("/api/users", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(usuario)
+                });
+                const datos = await respuesta.json();
+
+                if (!respuesta.ok) {
+                    mostrarErrores(error, datos);
+                    return;
+                }
+
+                // se creó bien: avisamos y dejamos el formulario vacío
+                ok.textContent = "Administrador creado: " + usuario.email;
+                form.reset();
+            } catch (err) {
+                error.textContent = "No se pudo conectar con el servidor";
+            }
+        });
+    </script>
+<%- include("partials/footer.ejs") %>

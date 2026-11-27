@@ -2,20 +2,21 @@
     Rutas vistas
 =====================*/
 import { Router } from "express";
-import { validateId } from "../middlewares/middlewares.js";
-import { vistaAlta, vistaDashboard, vistaLogin, vistaModificar } from "../controllers/view.controllers.js";
+import { requireLogin, validateId } from "../middlewares/middlewares.js";
+import { vistaAlta, vistaAltaAdmin, vistaDashboard, vistaModificar } from "../controllers/view.controllers.js";
 const router = Router();
 
 
-router.get("/login", vistaLogin);
+// Todas las vistas del administrador piden sesion iniciada (requireLogin)
+router.get("/dashboard", requireLogin, vistaDashboard);
 
 
-router.get("/dashboard", vistaDashboard);
+router.get("/products/new", requireLogin, vistaAlta);
 
 
-router.get("/products/new", vistaAlta);
+router.get("/users/new", requireLogin, vistaAltaAdmin);
 
 
-router.get("/products/:id/edit", validateId, vistaModificar);
+router.get("/products/:id/edit", requireLogin, validateId, vistaModificar);
 
 export default router;

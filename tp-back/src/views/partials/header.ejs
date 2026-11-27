@@ -12,6 +12,9 @@
         <nav>
             <a class="btn" href="/admin/dashboard">Dashboard</a>
             <a class="btn" href="/admin/products/new">Agregar producto</a>
-            <button type="button" class="btn" onclick="cerrarSesion()">Cerrar sesión</button>
+            <a class="btn" href="/admin/users/new">Agregar administrador</a>
+            <form action="/admin/logout" method="POST" style="display:inline;">
+                <button type="submit" class="btn">Cerrar sesión</button>
+            </form>
         </nav>
     </header>

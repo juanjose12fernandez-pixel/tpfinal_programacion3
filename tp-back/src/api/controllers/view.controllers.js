@@ -7,14 +7,6 @@ import { categoriasValidas } from "../utils/index.js";
 
 
 //////////////////////
-// Vista login
-export const vistaLogin = (req, res) => {
-    res.render("login");
-}
-
-
-
-//////////////////////
 // Vista dashboard (listado de productos separados por categoria)
 export const vistaDashboard = async (req, res) => {
 
@@ -67,4 +59,12 @@ export const vistaModificar = async (req, res) => {
 
         res.status(500).send("Error interno del servidor");
     }
+}
+
+
+
+//////////////////////
+// Vista alta de administrador
+export const vistaAltaAdmin = (req, res) => {
+    res.render("alta-admin");
 }

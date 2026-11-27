@@ -3,6 +3,7 @@
 ============================*/
 
 import UserModels from "../models/user.models.js";
+import bcrypt from "bcrypt"; // Importamos bcrypt para hashear las contrasenas
 
 
 /////////////////////////
@@ -21,8 +22,11 @@ export const createUser = async (req, res) => {
             });
         }
 
-        // TODO: la contrasena se guarda tal cual llega. El cifrado (ej: bcrypt) se suma cuando se vea en clase
-        const [rows] = await UserModels.insertNewUser(name.trim(), email, password);
+        // Hasheamos la contrasena antes de guardarla (10 rondas de sal)
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        const [rows] = await UserModels.insertNewUser(name.trim(), email, hashedPassword);
 
         res.status(201).json({
             message: "Usuario creado exitosamente",
@@ -31,43 +35,6 @@ export const createUser = async (req, res) => {
 
     } catch (error) {
         console.log("Error creando un usuario: ", error);
-
-        res.status(500).json({
-            message: "Error interno del servidor"
-        });
-    }
-}
-
-
-
-/////////////////////////
-// POST login (el login obtiene los datos del usuario de la BBDD)
-export const loginUser = async (req, res) => {
-
-    try {
-        const { email, password } = req.body;
-
-        const [rows] = await UserModels.selectUserByEmail(email);
-
-        // Mismo mensaje si no existe el email o si la contrasena no coincide (no damos pistas)
-        if (rows.length === 0 || rows[0].password !== password) {
-            return res.status(401).json({
-                message: "Email o contrasena incorrectos"
-            });
-        }
-
-        // Nunca devolvemos la contrasena
-        res.status(200).json({
-            message: "Login exitoso",
-            payload: {
-                id: rows[0].id,
-                name: rows[0].name,
-                email: rows[0].email
-            }
-        });
-
-    } catch (error) {
-        console.log("Error en el login: ", error);
 
         res.status(500).json({
             message: "Error interno del servidor"

@@ -49,7 +49,7 @@ const selectActiveProductById = (id) => {
 
 ////////////////////////////////
 // Crear producto
-const insertNewProduct = (name, image, category, price) => {
+const insertProduct = (name, image, category, price) => {
 
     // Los placeholders "?" son una medida de seguridad para prevenir ataques de seguridad informatica como la inyeccion SQL
     const sql = "INSERT INTO products (name, image, category, price) VALUES (?, ?, ?, ?)";
@@ -94,7 +94,7 @@ export default {
     selectProductById,
     selectActiveProducts,
     selectActiveProductById,
-    insertNewProduct,
+    insertProduct,
     updateProduct,
     deactivateProduct,
     activateProduct

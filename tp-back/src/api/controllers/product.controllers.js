@@ -101,8 +101,11 @@ export const createProduct = async (req, res) => {
     try {
         // Hacemos el destructuring de un objeto que parseamos previamente a traves del middleware express.json()
         const { category, image, name, price } = req.body;
+
+        // Optimizacion 5: Sanitizamos el string antes de insertarlo, para normalizar los datos
+        const cleanName = name.trim();
     
-        const [rows] = await ProductModels.insertNewProduct(name, image, category, price);
+        const [rows] = await ProductModels.insertProduct(cleanName, image, category, price);
 
         console.log(rows);
 

@@ -5,7 +5,8 @@ import express from "express"; // Importamos el framework Express
 import environments from "./src/api/config/environments.js"; // Traigo la info de la variables de entorno
 import cors from "cors"; // Importamos el middleware CORS
 import { loggerUrl } from "./src/api/middlewares/middlewares.js";
-import { productRoutes, saleRoutes, userRoutes, viewRoutes } from "./src/api/routes/index.js";
+import session from "express-session"; // Importamos express-session para manejar las sesiones
+import { productRoutes, saleRoutes, userRoutes, viewRoutes, authRoutes } from "./src/api/routes/index.js";
 import { join, __dirname, appInfo } from "./src/api/utils/index.js";
 
 
@@ -28,6 +29,15 @@ Middlewares
 app.use(cors()); // Middleware CORS basico para permitir todas las solicitudes
 
 app.use(express.json()); // Middleware para parsear el JSON recibido en el cuerpo de las solicitudes POST y PUT
+
+app.use(express.urlencoded({ extended: true })); // Middleware para parsear los datos de los formularios HTML (login)
+
+// Middleware de sesiones: guarda en el servidor quien inicio sesion
+app.use(session({
+    secret: environments.session_key, // Clave secreta para firmar la cookie de sesion
+    resave: false,
+    saveUninitialized: false
+}));
 
 app.use(loggerUrl); // Middleware logger para analizar las solicitudes por la consola
 
@@ -58,7 +68,10 @@ app.use("/api/sales", saleRoutes);
 // Rutas usuario (alta de administrador y login)
 app.use("/api/users", userRoutes);
 
-// Rutas vistas
+// Rutas autenticacion (login y logout)
+app.use("/admin", authRoutes);
+
+// Rutas vistas (protegidas con requireLogin)
 app.use("/admin", viewRoutes);
 
 
